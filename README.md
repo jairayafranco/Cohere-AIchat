@@ -1,34 +1,40 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Chat Application with Artificial Intelligence
 
-## Getting Started
+![App Preview](static/images/cap.png)
 
-First, run the development server:
+## Description
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+This is a chat application based on artificial intelligence that utilizes Next.js and Cohere to provide an intelligent and personalized conversation experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application allows users to interact with a pre-trained language model from Cohere to get responses to their questions and engage in natural conversations. It's perfect for integration into websites or applications where chatbot functionality is required.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Simple and user-friendly chat interface.
+- Utilizes an advanced language model from Cohere for intelligent responses.
+- Integration with Cohere API to make requests to the model.
+- Easy customization and configuration.
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone this repository to your local machine.
+2. Navigate to the project folder: `cd cohere-aichat`
+3. Install the dependencies: `npm install`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Obtain an API key from Cohere by signing up on their platform.
+2. Copy the API key and paste it into the `.env` file at the root of the project:
+   
+   ```bash
+   COHERE_API_KEY=your_api_key_here
+   ```
 
-## Deploy on Vercel
+## Usage
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Run the application: `npm run dev`
+2. Open your browser and go to `http://localhost:3000` to interact with the chat.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contribution
+
+If you find any bugs or have ideas to improve the application, feel free to contribute! Just fork the repository, create a branch with your changes, and submit a pull request.
