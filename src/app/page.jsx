@@ -1,5 +1,5 @@
 "use client"
-import { useCompletion } from 'ai/react'
+import { useCompletion } from '@ai-sdk/react'
 import { useRef, useEffect } from 'react'
 
 export default function HomePage() {
@@ -31,9 +31,9 @@ export default function HomePage() {
           className="text-white max-h-96 h-full overflow-auto mt-2 scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-slate-700 "
           ref={chatElement}
         >
-          <output>
+          <div>
             {completion}
-          </output>
+          </div>
         </div>
 
         <div className="flex justify-between my-4">

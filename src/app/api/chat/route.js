@@ -1,36 +1,21 @@
-import { StreamingTextResponse, CohereStream } from 'ai'
+import { createCohere } from '@ai-sdk/cohere';
+import { streamText } from 'ai';
 
-export const runtime = 'edge'
+export const runtime = 'edge';
 
 export async function POST(req) {
-    const { prompt } = await req.json()
+    const { prompt } = await req.json();
 
-    const body = JSON.stringify({
+    const cohere = createCohere({
+        apiKey: process.env.COHERE_API_KEY,
+    });
+
+    const result = await streamText({
+        model: cohere('command-nightly'),
         prompt,
-        model: 'command-nightly',
-        max_tokens: 1000,
-        stop_sequences: [],
+        maxTokens: 1000,
         temperature: 1.2,
-        return_likelihoods: 'NONE',
-        stream: true
-    })
+    });
 
-    const response = await fetch('https://api.cohere.ai/v1/generate', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.COHERE_API_KEY}`
-        },
-        body
-    })
-
-    if (!response.ok) {
-        return new Response(await response.text(), {
-            status: response.status
-        })
-    }
-
-    const stream = CohereStream(response)
-
-    return new StreamingTextResponse(stream)
+    return result.toTextStreamResponse();
 }
