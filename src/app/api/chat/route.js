@@ -6,9 +6,9 @@ export const runtime = 'edge';
 // Configuración desde variables de entorno
 const CONFIG = {
     model: process.env.COHERE_MODEL || 'command-nightly',
-    maxTokens: parseInt(process.env.MAX_TOKENS || '1000', 10),
+    maxTokens: parseInt(process.env.MAX_TOKENS || '500', 10), // Reducido de 1000 a 500
     temperature: parseFloat(process.env.TEMPERATURE || '0.7'),
-    maxPromptLength: parseInt(process.env.MAX_PROMPT_LENGTH || '2000', 10),
+    maxPromptLength: parseInt(process.env.MAX_PROMPT_LENGTH || '500', 10), // Reducido de 2000 a 500
 };
 
 /**
@@ -32,7 +32,6 @@ function validatePrompt(prompt) {
         };
     }
 
-    return { valid: true, prompt: trimmedPrompt };
 }
 
 export async function POST(req) {
