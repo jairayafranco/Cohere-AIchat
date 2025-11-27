@@ -1,38 +1,136 @@
 import { useState, useCallback, useEffect } from 'react';
 import { MESSAGE_ROLES, CHAT_CONFIG, ERROR_MESSAGES } from '@/utils/constants';
 import { validateMessage, sanitizeMessage } from '@/utils/validators';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
- * Hook personalizado para manejar la lógica del chat
+ * Hook personalizado para manejar la lógica del chat y múltiples sesiones
  */
 export function useChat() {
+    const [sessions, setSessions] = useState([]);
+    const [currentSessionId, setCurrentSessionId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // Cargar historial del localStorage al montar
+    // Cargar sesiones del localStorage al montar
     useEffect(() => {
         try {
-            const savedMessages = localStorage.getItem(CHAT_CONFIG.STORAGE_KEY);
-            if (savedMessages) {
-                setMessages(JSON.parse(savedMessages));
+            const savedSessions = localStorage.getItem(CHAT_CONFIG.STORAGE_KEY_SESSIONS);
+            if (savedSessions) {
+                const parsedSessions = JSON.parse(savedSessions);
+                setSessions(parsedSessions);
+
+                // Cargar la última sesión o crear una nueva si no hay
+                if (parsedSessions.length > 0) {
+                    const lastSession = parsedSessions[0];
+                    setCurrentSessionId(lastSession.id);
+                    setMessages(lastSession.messages);
+                } else {
+                    createNewChat();
+                }
+            } else {
+                createNewChat();
             }
         } catch (err) {
             console.error('Error al cargar historial:', err);
+            createNewChat();
         }
     }, []);
 
-    // Guardar mensajes en localStorage cuando cambien
+    // Guardar sesiones en localStorage cuando cambien
     useEffect(() => {
-        if (messages.length > 0) {
+        if (sessions.length > 0) {
             try {
-                localStorage.setItem(CHAT_CONFIG.STORAGE_KEY, JSON.stringify(messages));
+                localStorage.setItem(CHAT_CONFIG.STORAGE_KEY_SESSIONS, JSON.stringify(sessions));
             } catch (err) {
                 console.error('Error al guardar historial:', err);
             }
         }
-    }, [messages]);
+    }, [sessions]);
+
+    // Actualizar la sesión actual cuando cambian los mensajes
+    useEffect(() => {
+        if (currentSessionId && messages.length > 0) {
+            setSessions(prevSessions => {
+                return prevSessions.map(session => {
+                    if (session.id === currentSessionId) {
+                        // Actualizar título si es el primer mensaje del usuario
+                        let title = session.title;
+                        if (session.messages.length === 0 && messages.length > 0) {
+                            const firstUserMsg = messages.find(m => m.role === MESSAGE_ROLES.USER);
+                            if (firstUserMsg) {
+                                title = firstUserMsg.content.slice(0, 30) + (firstUserMsg.content.length > 30 ? '...' : '');
+                            }
+                        }
+
+                        return {
+                            ...session,
+                            messages: messages,
+                            title: title,
+                            lastModified: new Date().toISOString()
+                        };
+                    }
+                    return session;
+                });
+            });
+        }
+    }, [messages, currentSessionId]);
+
+    const createNewChat = useCallback(() => {
+        const newSession = {
+            id: uuidv4(),
+            title: 'Nuevo Chat',
+            messages: [],
+            createdAt: new Date().toISOString(),
+            lastModified: new Date().toISOString()
+        };
+
+        setSessions(prev => [newSession, ...prev]);
+        setCurrentSessionId(newSession.id);
+        setMessages([]);
+        setInput('');
+        setError(null);
+    }, []);
+
+    const loadChat = useCallback((sessionId) => {
+        const session = sessions.find(s => s.id === sessionId);
+        if (session) {
+            setCurrentSessionId(sessionId);
+            setMessages(session.messages);
+            setInput('');
+            setError(null);
+        }
+    }, [sessions]);
+
+    const deleteChat = useCallback((sessionId) => {
+        setSessions(prev => {
+            const newSessions = prev.filter(s => s.id !== sessionId);
+
+            // Si borramos la sesión actual, cambiar a otra o crear nueva
+            if (sessionId === currentSessionId) {
+                if (newSessions.length > 0) {
+                    setCurrentSessionId(newSessions[0].id);
+                    setMessages(newSessions[0].messages);
+                } else {
+                    // Si no quedan sesiones, crear una nueva en el próximo render/effect
+                    // Pero para UX inmediata, reseteamos aquí
+                    const newSession = {
+                        id: uuidv4(),
+                        title: 'Nuevo Chat',
+                        messages: [],
+                        createdAt: new Date().toISOString(),
+                        lastModified: new Date().toISOString()
+                    };
+                    newSessions.push(newSession);
+                    setCurrentSessionId(newSession.id);
+                    setMessages([]);
+                }
+            }
+            return newSessions;
+        });
+    }, [currentSessionId]);
 
     const handleInputChange = useCallback((e) => {
         setInput(e.target.value);
@@ -120,12 +218,17 @@ export function useChat() {
         setMessages([]);
         setInput('');
         setError(null);
-        localStorage.removeItem(CHAT_CONFIG.STORAGE_KEY);
-    }, []);
+        // Actualizar la sesión actual para que esté vacía
+        setSessions(prev => prev.map(s => {
+            if (s.id === currentSessionId) {
+                return { ...s, messages: [], title: 'Nuevo Chat' };
+            }
+            return s;
+        }));
+    }, [currentSessionId]);
 
     const copyMessage = useCallback((content) => {
         navigator.clipboard.writeText(content).then(() => {
-            // Podrías agregar un toast aquí
             console.log('Mensaje copiado al portapapeles');
         }).catch(err => {
             console.error('Error al copiar:', err);
@@ -137,9 +240,14 @@ export function useChat() {
         input,
         isLoading,
         error,
+        sessions,
+        currentSessionId,
         handleInputChange,
         sendMessage,
         clearChat,
         copyMessage,
+        createNewChat,
+        loadChat,
+        deleteChat
     };
 }

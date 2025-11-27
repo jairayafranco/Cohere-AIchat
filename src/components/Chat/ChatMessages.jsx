@@ -18,7 +18,7 @@ export default function ChatMessages({ messages, isLoading, onCopyMessage }) {
     return (
         <div
             ref={containerRef}
-            className="max-h-96 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-slate-700 px-2"
+            className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-slate-700 p-4"
             role="log"
             aria-live="polite"
             aria-label="Mensajes del chat"

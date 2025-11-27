@@ -1,8 +1,9 @@
 // Constantes de configuración
 export const CHAT_CONFIG = {
-    MAX_CHARS: 2000,
+    MAX_CHARS: 500,
     SCROLL_BEHAVIOR: 'smooth',
     STORAGE_KEY: 'cohere-chat-history',
+    STORAGE_KEY_SESSIONS: 'cohere-chat-sessions',
 };
 
 export const MESSAGE_ROLES = {
