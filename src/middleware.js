@@ -10,6 +10,21 @@ const RATE_LIMIT_CONFIG = {
 // NOTA: Se resetea con cada deploy, pero es suficiente para protección básica
 const requestCounts = new Map();
 
+// Mensajes de error en diferentes idiomas
+const ERROR_MESSAGES = {
+    es: (seconds) => `Demasiadas solicitudes. Por favor, espera ${seconds} segundos.`,
+    en: (seconds) => `Too many requests. Please wait ${seconds} seconds.`
+};
+
+/**
+ * Obtiene el idioma preferido del usuario desde los headers
+ */
+function getPreferredLanguage(request) {
+    const acceptLanguage = request.headers.get('accept-language') || '';
+    // Si el idioma preferido incluye 'en', usar inglés, sino español
+    return acceptLanguage.toLowerCase().includes('en') ? 'en' : 'es';
+}
+
 /**
  * Obtiene la IP del cliente
  */
@@ -98,9 +113,12 @@ export function middleware(request) {
         const { allowed, remaining, resetIn } = checkRateLimit(ip);
 
         if (!allowed) {
+            const lang = getPreferredLanguage(request);
+            const errorMessage = ERROR_MESSAGES[lang](resetIn);
+
             return NextResponse.json(
                 {
-                    error: `Demasiadas solicitudes. Por favor, espera ${resetIn} segundos.`,
+                    error: errorMessage,
                     retryAfter: resetIn
                 },
                 {

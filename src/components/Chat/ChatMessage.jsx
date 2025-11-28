@@ -1,3 +1,4 @@
+"use client"
 import { useState, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -5,12 +6,14 @@ import remarkMath from 'remark-math';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeKatex from 'rehype-katex';
 import { MESSAGE_ROLES } from '@/utils/constants';
+import { useTranslations } from '@/hooks/useTranslations';
 import 'highlight.js/styles/github-dark.css'; // Estilo para bloques de código
 import 'katex/dist/katex.min.css'; // Estilo para ecuaciones
 
 export default function ChatMessage({ message, onCopy }) {
     const [showCopyButton, setShowCopyButton] = useState(false);
     const [copied, setCopied] = useState(false);
+    const t = useTranslations('chat.messages');
 
     const isUser = message.role === MESSAGE_ROLES.USER;
 
@@ -27,7 +30,7 @@ export default function ChatMessage({ message, onCopy }) {
         let content = message.content;
 
         // Reemplazar \[ ... \] con $$ ... $$
-        content = content.replace(/\\\[([\s\S]*?)\\\]/g, '$$$$$1$$$$');
+        content = content.replace(/\\\[([\s\S]*?)\\\]/g, '$$$$$$1$$$$');
 
         // Reemplazar \( ... \) con $ ... $
         content = content.replace(/\\\(([\s\S]*?)\\\)/g, '$$$1$$');
@@ -49,7 +52,7 @@ export default function ChatMessage({ message, onCopy }) {
             >
                 {/* Indicador de rol */}
                 <div className="text-xs opacity-70 mb-1 font-semibold">
-                    {isUser ? 'Tú' : 'Asistente'}
+                    {isUser ? t('user') : t('assistant')}
                 </div>
 
                 {/* Contenido del mensaje */}
@@ -121,8 +124,8 @@ export default function ChatMessage({ message, onCopy }) {
                     <button
                         onClick={handleCopy}
                         className="absolute -top-2 -right-2 bg-gray-800 hover:bg-gray-700 text-white p-1.5 rounded-full shadow-lg transition-all z-10"
-                        aria-label="Copiar mensaje"
-                        title="Copiar mensaje"
+                        aria-label={t('copy')}
+                        title={t('copy')}
                     >
                         {copied ? (
                             <svg

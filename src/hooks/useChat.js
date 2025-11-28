@@ -81,7 +81,7 @@ export function useChat() {
     const createNewChat = useCallback(() => {
         const newSession = {
             id: uuidv4(),
-            title: 'Nuevo Chat',
+            title: null,
             messages: [],
             createdAt: new Date().toISOString(),
             lastModified: new Date().toISOString()
@@ -104,33 +104,47 @@ export function useChat() {
         }
     }, [sessions]);
 
-    const deleteChat = useCallback((sessionId) => {
-        setSessions(prev => {
-            const newSessions = prev.filter(s => s.id !== sessionId);
-
-            // Si borramos la sesión actual, cambiar a otra o crear nueva
-            if (sessionId === currentSessionId) {
-                if (newSessions.length > 0) {
-                    setCurrentSessionId(newSessions[0].id);
-                    setMessages(newSessions[0].messages);
-                } else {
-                    // Si no quedan sesiones, crear una nueva en el próximo render/effect
-                    // Pero para UX inmediata, reseteamos aquí
+    // Efecto para manejar la eliminación de la sesión actual
+    useEffect(() => {
+        // Si no hay sesiones (se borró la última), crear una nueva
+        if (sessions.length === 0) {
+            // Evitamos crear sesión si estamos en el montaje inicial (ya lo maneja el primer useEffect)
+            // Verificamos si ya se intentó cargar del localStorage
+            const savedSessions = localStorage.getItem(CHAT_CONFIG.STORAGE_KEY_SESSIONS);
+            // Si hay algo guardado pero sessions está vacío, significa que se borraron todas
+            // O si no hay nada guardado y sessions está vacío, también creamos
+            if (savedSessions !== null || sessions.length === 0) {
+                // Usamos un timeout para evitar actualizaciones durante el render
+                const timer = setTimeout(() => {
                     const newSession = {
                         id: uuidv4(),
-                        title: 'Nuevo Chat',
+                        title: null,
                         messages: [],
                         createdAt: new Date().toISOString(),
                         lastModified: new Date().toISOString()
                     };
-                    newSessions.push(newSession);
+                    setSessions([newSession]);
                     setCurrentSessionId(newSession.id);
                     setMessages([]);
-                }
+                }, 0);
+                return () => clearTimeout(timer);
             }
-            return newSessions;
-        });
-    }, [currentSessionId]);
+        }
+
+        // Si la sesión actual ya no existe en la lista (fue borrada), cambiar a la primera disponible
+        if (currentSessionId && sessions.length > 0) {
+            const currentSessionExists = sessions.some(s => s.id === currentSessionId);
+            if (!currentSessionExists) {
+                const nextSession = sessions[0];
+                setCurrentSessionId(nextSession.id);
+                setMessages(nextSession.messages);
+            }
+        }
+    }, [sessions, currentSessionId]);
+
+    const deleteChat = useCallback((sessionId) => {
+        setSessions(prev => prev.filter(s => s.id !== sessionId));
+    }, []);
 
     const handleInputChange = useCallback((e) => {
         setInput(e.target.value);
@@ -221,7 +235,7 @@ export function useChat() {
         // Actualizar la sesión actual para que esté vacía
         setSessions(prev => prev.map(s => {
             if (s.id === currentSessionId) {
-                return { ...s, messages: [], title: 'Nuevo Chat' };
+                return { ...s, messages: [], title: null };
             }
             return s;
         }));

@@ -1,0 +1,52 @@
+{
+  "common": {
+    "appName": "Cohe-Chat",
+    "error": "Error",
+    "loading": "Loading"
+  },
+  "chat": {
+    "header": {
+      "title": "Cohe-Chat",
+      "messageCount": "{count} {count, plural, one {message} other {messages}}",
+      "clearChat": "Clear chat",
+      "clearChatShortcut": "Clear chat (Ctrl+Shift+Delete)"
+    },
+    "messages": {
+      "user": "You",
+      "assistant": "Assistant",
+      "copy": "Copy",
+      "copied": "Copied"
+    },
+    "confirmClear": "Are you sure you want to clear the chat? This action cannot be undone.",
+    "confirmClearShortcut": "Are you sure you want to clear the chat?"
+  },
+  "input": {
+    "label": "Write your message",
+    "placeholder": "Type your message here... (Ctrl+Enter to send)",
+    "send": "Send",
+    "sending": "Sending",
+    "sendingMessage": "Sending message",
+    "sendMessage": "Send message",
+    "charactersRemaining": "{count} characters remaining",
+    "shortcuts": {
+      "send": "to send",
+      "clear": "to clear"
+    }
+  },
+  "sidebar": {
+    "newChat": "New Chat",
+    "deleteChat": "Delete chat",
+    "confirmDelete": "Delete this chat?",
+    "noChats": "No saved chats",
+    "footer": "Cohere AI Chat"
+  },
+  "errors": {
+    "rateLimitExceeded": "Too many requests. Please wait {seconds} seconds.",
+    "generic": "An error occurred. Please try again."
+  },
+  "metadata": {
+    "title": "Cohe-Chat - AI Chat",
+    "description": "Intelligent chat application powered by Cohere AI. Converse naturally with an artificial intelligence assistant.",
+    "keywords": "chat, AI, artificial intelligence, Cohere, virtual assistant"
+  }
+}

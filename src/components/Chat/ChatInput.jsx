@@ -1,6 +1,8 @@
+"use client"
 import { useRef, useEffect } from 'react';
 import Button from '../ui/Button';
 import { CHAT_CONFIG } from '@/utils/constants';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export default function ChatInput({
     value,
@@ -10,6 +12,7 @@ export default function ChatInput({
     disabled,
 }) {
     const textareaRef = useRef(null);
+    const t = useTranslations('input');
 
     // Auto-focus en el textarea al montar
     useEffect(() => {
@@ -41,22 +44,22 @@ export default function ChatInput({
                     htmlFor="chat-input"
                     className="text-white font-bold block"
                 >
-                    Escribe tu mensaje
+                    {t('label')}
                 </label>
                 <Button
                     type="submit"
                     disabled={isLoading || !value.trim() || disabled}
                     onClick={onSubmit}
-                    ariaLabel={isLoading ? 'Enviando mensaje' : 'Enviar mensaje'}
+                    ariaLabel={isLoading ? t('sendingMessage') : t('sendMessage')}
                     className="min-w-[100px]"
                 >
                     {isLoading ? (
                         <span className="flex items-center gap-2">
                             <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            Enviando
+                            {t('sending')}
                         </span>
                     ) : (
-                        'Enviar'
+                        t('send')
                     )}
                 </Button>
             </div>
@@ -69,7 +72,7 @@ export default function ChatInput({
                     onChange={onChange}
                     onKeyDown={handleKeyDown}
                     className="text-black bg-slate-300 px-3 py-2 w-full rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
-                    placeholder="Escribe tu mensaje aquí... (Ctrl+Enter para enviar)"
+                    placeholder={t('placeholder')}
                     rows="4"
                     maxLength={CHAT_CONFIG.MAX_CHARS}
                     disabled={isLoading || disabled}
@@ -85,14 +88,14 @@ export default function ChatInput({
                         : 'bg-gray-700 text-gray-300'
                         }`}
                 >
-                    {charsRemaining} caracteres restantes
+                    {t('charactersRemaining', { count: charsRemaining })}
                 </div>
             </div>
 
             {/* Ayuda de atajos de teclado */}
             <div className="flex gap-4 text-xs text-gray-400">
-                <span>💡 <kbd className="px-1.5 py-0.5 bg-gray-800 rounded">Ctrl+Enter</kbd> para enviar</span>
-                <span>🗑️ <kbd className="px-1.5 py-0.5 bg-gray-800 rounded">Ctrl+Shift+Del</kbd> para limpiar</span>
+                <span>💡 <kbd className="px-1.5 py-0.5 bg-gray-800 rounded">Ctrl+Enter</kbd> {t('shortcuts.send')}</span>
+                <span>🗑️ <kbd className="px-1.5 py-0.5 bg-gray-800 rounded">Ctrl+Shift+Del</kbd> {t('shortcuts.clear')}</span>
             </div>
         </div>
     );

@@ -5,6 +5,7 @@ import ChatHeader from '@/components/Chat/ChatHeader';
 import ChatMessages from '@/components/Chat/ChatMessages';
 import ChatInput from '@/components/Chat/ChatInput';
 import ChatSidebar from '@/components/Chat/ChatSidebar';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export default function HomePage() {
   const {
@@ -24,6 +25,7 @@ export default function HomePage() {
   } = useChat();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const t = useTranslations('chat');
 
   // Atajos de teclado globales
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function HomePage() {
       // Ctrl+Shift+Delete para limpiar chat
       if (e.ctrlKey && e.shiftKey && e.key === 'Delete') {
         e.preventDefault();
-        if (messages.length > 0 && confirm('¿Estás seguro de que quieres limpiar el chat?')) {
+        if (messages.length > 0 && confirm(t('confirmClearShortcut'))) {
           clearChat();
         }
       }
@@ -39,10 +41,10 @@ export default function HomePage() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [messages.length, clearChat]);
+  }, [messages.length, clearChat, t]);
 
   const handleClearChat = () => {
-    if (confirm('¿Estás seguro de que quieres limpiar el chat? Esta acción no se puede deshacer.')) {
+    if (confirm(t('confirmClear'))) {
       clearChat();
     }
   };
