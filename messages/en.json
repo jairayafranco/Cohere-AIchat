@@ -2,7 +2,9 @@
   "common": {
     "appName": "Cohe-Chat",
     "error": "Error",
-    "loading": "Loading"
+    "loading": "Loading",
+    "selectLanguage": "Select language",
+    "chatMessages": "Chat messages"
   },
   "chat": {
     "header": {
@@ -15,7 +17,12 @@
       "user": "You",
       "assistant": "Assistant",
       "copy": "Copy",
-      "copied": "Copied"
+      "copied": "Copied",
+      "emptyState": {
+        "title": "Start a conversation!",
+        "description": "Type a message below to get started"
+      },
+      "assistantTyping": "Assistant is typing..."
     },
     "confirmClear": "Are you sure you want to clear the chat? This action cannot be undone.",
     "confirmClearShortcut": "Are you sure you want to clear the chat?"

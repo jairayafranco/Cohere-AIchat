@@ -26,6 +26,7 @@ export default function HomePage() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const t = useTranslations('chat');
+  const tCommon = useTranslations('common');
 
   // Atajos de teclado globales
   useEffect(() => {
@@ -99,7 +100,7 @@ export default function HomePage() {
                 />
               </svg>
               <div>
-                <p className="font-semibold">Error</p>
+                <p className="font-semibold">{tCommon('error')}</p>
                 <p className="text-sm">{error}</p>
               </div>
             </div>

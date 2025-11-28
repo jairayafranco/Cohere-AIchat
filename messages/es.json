@@ -2,7 +2,9 @@
   "common": {
     "appName": "Cohe-Chat",
     "error": "Error",
-    "loading": "Cargando"
+    "loading": "Cargando",
+    "selectLanguage": "Seleccionar idioma",
+    "chatMessages": "Mensajes del chat"
   },
   "chat": {
     "header": {
@@ -15,7 +17,12 @@
       "user": "Tú",
       "assistant": "Asistente",
       "copy": "Copiar",
-      "copied": "Copiado"
+      "copied": "Copiado",
+      "emptyState": {
+        "title": "¡Comienza una conversación!",
+        "description": "Escribe un mensaje abajo para empezar"
+      },
+      "assistantTyping": "El asistente está escribiendo..."
     },
     "confirmClear": "¿Estás seguro de que quieres limpiar el chat? Esta acción no se puede deshacer.",
     "confirmClearShortcut": "¿Estás seguro de que quieres limpiar el chat?"

@@ -1,8 +1,12 @@
+"use client"
 import { useRef, useEffect } from 'react';
 import ChatMessage from './ChatMessage';
 import LoadingSpinner from '../ui/LoadingSpinner';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export default function ChatMessages({ messages, isLoading, onCopyMessage }) {
+    const t = useTranslations('chat.messages');
+    const tCommon = useTranslations('common');
     const messagesEndRef = useRef(null);
     const containerRef = useRef(null);
 
@@ -21,7 +25,7 @@ export default function ChatMessages({ messages, isLoading, onCopyMessage }) {
             className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-slate-700 p-4"
             role="log"
             aria-live="polite"
-            aria-label="Mensajes del chat"
+            aria-label={tCommon('chatMessages')}
         >
             {messages.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-gray-400 text-center py-12">
@@ -39,8 +43,8 @@ export default function ChatMessages({ messages, isLoading, onCopyMessage }) {
                             d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                         />
                     </svg>
-                    <p className="text-lg font-medium">¡Comienza una conversación!</p>
-                    <p className="text-sm mt-2">Escribe un mensaje abajo para empezar</p>
+                    <p className="text-lg font-medium">{t('emptyState.title')}</p>
+                    <p className="text-sm mt-2">{t('emptyState.description')}</p>
                 </div>
             ) : (
                 <>
@@ -55,7 +59,7 @@ export default function ChatMessages({ messages, isLoading, onCopyMessage }) {
                     {isLoading && (
                         <div className="flex items-center gap-3 text-gray-400 mb-4">
                             <LoadingSpinner size="sm" />
-                            <span className="text-sm">El asistente está escribiendo...</span>
+                            <span className="text-sm">{t('assistantTyping')}</span>
                         </div>
                     )}
 

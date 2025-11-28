@@ -76,7 +76,7 @@ export default function ChatInput({
                     rows="4"
                     maxLength={CHAT_CONFIG.MAX_CHARS}
                     disabled={isLoading || disabled}
-                    aria-label="Campo de mensaje"
+                    aria-label={t('label')}
                     aria-describedby="char-count"
                 />
 

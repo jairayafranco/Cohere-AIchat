@@ -1,8 +1,10 @@
 "use client"
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useTranslations } from '@/hooks/useTranslations';
 
 export default function LanguageSelector() {
     const { locale, changeLocale } = useLanguage();
+    const t = useTranslations('common');
 
     const languages = [
         { code: 'es', name: 'Español', flag: '🇪🇸' },
@@ -15,7 +17,7 @@ export default function LanguageSelector() {
                 value={locale}
                 onChange={(e) => changeLocale(e.target.value)}
                 className="appearance-none bg-gray-800 text-white px-3 py-2 pr-8 rounded-md border border-gray-700 hover:bg-gray-700 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-500"
-                aria-label="Seleccionar idioma"
+                aria-label={t('selectLanguage')}
             >
                 {languages.map((lang) => (
                     <option key={lang.code} value={lang.code}>

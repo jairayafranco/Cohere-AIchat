@@ -7,6 +7,7 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeKatex from 'rehype-katex';
 import { MESSAGE_ROLES } from '@/utils/constants';
 import { useTranslations } from '@/hooks/useTranslations';
+import { useLanguage } from '@/contexts/LanguageContext';
 import 'highlight.js/styles/github-dark.css'; // Estilo para bloques de código
 import 'katex/dist/katex.min.css'; // Estilo para ecuaciones
 
@@ -14,6 +15,7 @@ export default function ChatMessage({ message, onCopy }) {
     const [showCopyButton, setShowCopyButton] = useState(false);
     const [copied, setCopied] = useState(false);
     const t = useTranslations('chat.messages');
+    const { locale } = useLanguage();
 
     const isUser = message.role === MESSAGE_ROLES.USER;
 
@@ -112,7 +114,7 @@ export default function ChatMessage({ message, onCopy }) {
                 {/* Timestamp */}
                 {message.timestamp && (
                     <div className="text-xs opacity-50 mt-2">
-                        {new Date(message.timestamp).toLocaleTimeString('es-ES', {
+                        {new Date(message.timestamp).toLocaleTimeString(locale === 'es' ? 'es-ES' : 'en-US', {
                             hour: '2-digit',
                             minute: '2-digit',
                         })}

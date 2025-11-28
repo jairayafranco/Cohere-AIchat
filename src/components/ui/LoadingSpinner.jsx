@@ -1,4 +1,8 @@
+"use client"
+import { useTranslations } from '@/hooks/useTranslations';
+
 export default function LoadingSpinner({ size = 'md', className = '' }) {
+    const t = useTranslations('common');
     const sizeClasses = {
         sm: 'h-4 w-4 border-2',
         md: 'h-6 w-6 border-2',
@@ -9,9 +13,9 @@ export default function LoadingSpinner({ size = 'md', className = '' }) {
         <div
             className={`animate-spin rounded-full border-green-500 border-t-transparent ${sizeClasses[size]} ${className}`}
             role="status"
-            aria-label="Cargando"
+            aria-label={t('loading')}
         >
-            <span className="sr-only">Cargando...</span>
+            <span className="sr-only">{t('loading')}</span>
         </div>
     );
 }
